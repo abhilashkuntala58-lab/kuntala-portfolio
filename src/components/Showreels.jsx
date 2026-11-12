@@ -157,10 +157,10 @@ export default function Showreels() {
 
             {activeVideo.isYouTube ? (
               <iframe
-                src={`${activeVideo.videoUrl}?autoplay=1`}
+                src={activeVideo.videoUrl}
                 title={activeVideo.title}
                 className="w-full h-full object-cover border-0 rounded-3xl"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allow="autoplay; encrypted-media; picture-in-picture; fullscreen"
                 allowFullScreen
               />
             ) : activeVideo.videoUrl ? (
