@@ -1,73 +1,15 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState } from 'react';
 import { Play, Film, X } from 'lucide-react';
 import { showreels } from '../data/portfolioData';
 
 export default function Showreels() {
   const [activeVideo, setActiveVideo] = useState(null);
-  const videoRefs = useRef({});
-  const [loadedSources, setLoadedSources] = useState({});
 
-  // IntersectionObserver for preparing nearby video sources with rootMargin 700px
-  useEffect(() => {
-    const observerCallback = (entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          const id = entry.target.getAttribute('data-reel-id');
-          if (id) {
-            setLoadedSources((prev) => {
-              if (!prev[id]) {
-                return { ...prev, [id]: true };
-              }
-              return prev;
-            });
-          }
-        }
-      });
-    };
-
-    const observerOptions = {
-      root: null,
-      rootMargin: '700px 0px',
-      threshold: 0,
-    };
-
-    const observer = new IntersectionObserver(observerCallback, observerOptions);
-
-    Object.values(videoRefs.current).forEach((el) => {
-      if (el) observer.observe(el);
-    });
-
-    return () => {
-      observer.disconnect();
-    };
-  }, []);
-
-  const handlePointerEnter = (id) => {
-    if (activeVideo) return;
-    const item = showreels.find((r) => r.id === id);
-    if (item && (item.isYouTube || (item.videoUrl && item.videoUrl.includes('youtube.com')))) return;
-    // Ensure source is loaded
-    setLoadedSources((prev) => ({ ...prev, [id]: true }));
-
-    // Pause all other videos and play the hovered one
-    Object.entries(videoRefs.current).forEach(([videoId, videoEl]) => {
-      if (videoEl) {
-        if (videoId === String(id)) {
-          videoEl.play().catch(() => {});
-        } else {
-          videoEl.pause();
-        }
-      }
-    });
-  };
-
-  const handlePointerLeave = (id) => {
-    const item = showreels.find((r) => r.id === id);
-    if (item && (item.isYouTube || (item.videoUrl && item.videoUrl.includes('youtube.com')))) return;
-    const videoEl = videoRefs.current[id];
-    if (videoEl) {
-      videoEl.pause();
-    }
+  const getYouTubeEmbedUrl = (url) => {
+    if (!url) return '';
+    const origin = typeof window !== 'undefined' ? window.location.origin : 'https://kuntala-portfolio.vercel.app';
+    const separator = url.includes('?') ? '&' : '?';
+    return `${url}${separator}origin=${encodeURIComponent(origin)}&enablejsapi=1`;
   };
 
   return (
@@ -89,29 +31,20 @@ export default function Showreels() {
               <div
                 key={item.id}
                 onClick={() => setActiveVideo(item)}
-                onPointerEnter={() => handlePointerEnter(item.id)}
-                onPointerLeave={() => handlePointerLeave(item.id)}
                 className="group relative aspect-[9/16] rounded-2xl overflow-hidden liquid-glass-card cursor-pointer"
               >
-                {isYT ? (
-                  <div className="absolute inset-0 bg-gradient-to-br from-[#ff6b00]/30 via-black to-[#121212] flex items-center justify-center pointer-events-none">
-                    <div className="text-center p-4">
-                      <Film className="w-12 h-12 text-[#ff6b00] mx-auto mb-2 opacity-90 group-hover:scale-110 transition-transform" />
-                      <span className="text-xs font-bold text-white tracking-wider uppercase">YouTube Reel</span>
-                    </div>
-                  </div>
-                ) : (
-                  <video
-                    ref={(el) => (videoRefs.current[item.id] = el)}
-                    data-reel-id={item.id}
-                    src={loadedSources[item.id] ? item.videoUrl : undefined}
-                    preload="metadata"
-                    muted
-                    loop
-                    playsInline
-                    className="absolute inset-0 w-full h-full object-cover opacity-60 group-hover:opacity-90 transition-opacity duration-300 pointer-events-none"
-                  />
-                )}
+                {/* Lazy-loaded Thumbnail Preview */}
+                <img
+                  src={item.thumbnailUrl}
+                  alt={item.title}
+                  loading="lazy"
+                  className="absolute inset-0 w-full h-full object-cover opacity-80 group-hover:scale-105 group-hover:opacity-100 transition-all duration-500 pointer-events-none"
+                  onError={(e) => {
+                    if (isYT && e.target.src.includes('maxresdefault.jpg')) {
+                      e.target.src = 'https://img.youtube.com/vi/jSraNZbMt4w/hqdefault.jpg';
+                    }
+                  }}
+                />
                 
                 {/* Cinematic gradient overlay */}
                 <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent z-10 pointer-events-none" />
@@ -152,9 +85,10 @@ export default function Showreels() {
 
             {activeVideo.isYouTube || (activeVideo.videoUrl && activeVideo.videoUrl.includes('youtube.com')) ? (
               <iframe
-                src={activeVideo.videoUrl}
+                src={getYouTubeEmbedUrl(activeVideo.videoUrl)}
                 title={activeVideo.title}
                 className="absolute inset-0 w-full h-full border-0 z-20"
+                referrerPolicy="strict-origin-when-cross-origin"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen"
                 allowFullScreen
               />

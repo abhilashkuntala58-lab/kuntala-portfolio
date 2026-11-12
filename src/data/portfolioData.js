@@ -70,60 +70,70 @@ export const showreels = [
     title: "Cinematic Reel 1",
     category: "Vertical 9:16",
     videoUrl: "https://www.youtube.com/embed/jSraNZbMt4w",
-    isYouTube: true
+    isYouTube: true,
+    thumbnailUrl: "https://img.youtube.com/vi/jSraNZbMt4w/maxresdefault.jpg"
   },
   {
     id: 2,
     title: "Cinematic Reel 2",
     category: "Vertical 9:16",
-    videoUrl: "/videos/reel2.mp4"
+    videoUrl: "/videos/reel2.mp4",
+    thumbnailUrl: "/thumbnails/reel2.jpg"
   },
   {
     id: 3,
     title: "Cinematic Reel 3",
     category: "Vertical 9:16",
-    videoUrl: "/videos/reel3.mp4"
+    videoUrl: "/videos/reel3.mp4",
+    thumbnailUrl: "/thumbnails/reel3.jpg"
   },
   {
     id: 4,
     title: "Cinematic Reel 4",
     category: "Vertical 9:16",
-    videoUrl: "/videos/reel4.mp4"
+    videoUrl: "/videos/reel4.mp4",
+    thumbnailUrl: "/thumbnails/reel4.jpg"
   },
   {
     id: 5,
     title: "Cinematic Reel 5",
     category: "Vertical 9:16",
-    videoUrl: "/videos/reel5.mp4"
+    videoUrl: "/videos/reel5.mp4",
+    thumbnailUrl: "/thumbnails/reel5.jpg"
   },
   {
     id: 6,
     title: "Cinematic Reel 6",
     category: "Vertical 9:16",
-    videoUrl: "/videos/reel6.mp4"
+    videoUrl: "/videos/reel6.mp4",
+    thumbnailUrl: "/thumbnails/reel6.jpg"
   },
   {
     id: 7,
     title: "Cinematic Reel 7",
     category: "Vertical 9:16",
-    videoUrl: "/videos/reel7.mp4"
+    videoUrl: "/videos/reel7.mp4",
+    thumbnailUrl: "/thumbnails/reel7.jpg"
   },
   {
     id: 8,
     title: "Cinematic Reel 8",
     category: "Vertical 9:16",
-    videoUrl: "/videos/reel8.mp4"
+    videoUrl: "/videos/reel8.mp4",
+    thumbnailUrl: "/thumbnails/reel8.jpg"
   },
   {
     id: 9,
     title: "Cinematic Reel 9",
     category: "Vertical 9:16",
-    videoUrl: "/videos/reel9.mp4"
+    videoUrl: "/videos/reel9.mp4",
+    thumbnailUrl: "/thumbnails/reel9.jpg"
   },
   {
     id: 10,
     title: "Cinematic Reel 10",
     category: "Vertical 9:16",
-    videoUrl: "/videos/reel10.mp4"
+    videoUrl: "/videos/reel10.mp4",
+    thumbnailUrl: "/thumbnails/reel10.jpg"
   }
 ];
