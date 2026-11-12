@@ -69,7 +69,8 @@ export const showreels = [
     id: 1,
     title: "Cinematic Reel 1",
     category: "Vertical 9:16",
-    videoUrl: "/videos/reel1.mp4"
+    videoUrl: "https://www.youtube.com/embed/jSraNZbMt4w",
+    isYouTube: true
   },
   {
     id: 2,

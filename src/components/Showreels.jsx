@@ -44,6 +44,8 @@ export default function Showreels() {
 
   const handlePointerEnter = (id) => {
     if (activeVideo) return;
+    const item = showreels.find((r) => r.id === id);
+    if (item && item.isYouTube) return;
     // Ensure source is loaded
     setLoadedSources((prev) => ({ ...prev, [id]: true }));
 
@@ -60,6 +62,8 @@ export default function Showreels() {
   };
 
   const handlePointerLeave = (id) => {
+    const item = showreels.find((r) => r.id === id);
+    if (item && item.isYouTube) return;
     const videoEl = videoRefs.current[id];
     if (videoEl) {
       videoEl.pause();
@@ -87,17 +91,25 @@ export default function Showreels() {
               onPointerLeave={() => handlePointerLeave(item.id)}
               className="group relative aspect-[9/16] rounded-2xl overflow-hidden liquid-glass-card cursor-pointer"
             >
-              {/* Video preview with preload="metadata", muted, loop, playsInline */}
-              <video
-                ref={(el) => (videoRefs.current[item.id] = el)}
-                data-reel-id={item.id}
-                src={loadedSources[item.id] ? item.videoUrl : undefined}
-                preload="metadata"
-                muted
-                loop
-                playsInline
-                className="absolute inset-0 w-full h-full object-cover opacity-60 group-hover:opacity-90 transition-opacity duration-300 pointer-events-none"
-              />
+              {item.isYouTube ? (
+                <div className="absolute inset-0 bg-gradient-to-br from-[#ff6b00]/25 via-black to-[#121212] flex items-center justify-center pointer-events-none">
+                  <div className="text-center p-4">
+                    <Film className="w-10 h-10 text-[#ff6b00] mx-auto mb-2 opacity-90 group-hover:scale-110 transition-transform" />
+                    <span className="text-xs font-bold text-white tracking-wider uppercase">YouTube Reel</span>
+                  </div>
+                </div>
+              ) : (
+                <video
+                  ref={(el) => (videoRefs.current[item.id] = el)}
+                  data-reel-id={item.id}
+                  src={loadedSources[item.id] ? item.videoUrl : undefined}
+                  preload="metadata"
+                  muted
+                  loop
+                  playsInline
+                  className="absolute inset-0 w-full h-full object-cover opacity-60 group-hover:opacity-90 transition-opacity duration-300 pointer-events-none"
+                />
+              )}
               
               {/* Cinematic gradient overlay */}
               <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent z-10 pointer-events-none" />
@@ -143,7 +155,15 @@ export default function Showreels() {
               <X className="w-5 h-5" />
             </button>
 
-            {activeVideo.videoUrl ? (
+            {activeVideo.isYouTube ? (
+              <iframe
+                src={`${activeVideo.videoUrl}?autoplay=1`}
+                title={activeVideo.title}
+                className="w-full h-full object-cover border-0 rounded-3xl"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+              />
+            ) : activeVideo.videoUrl ? (
               <video
                 src={activeVideo.videoUrl}
                 controls
